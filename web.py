@@ -4,8 +4,10 @@ import functions
 todos = functions.get_todos()
 
 def add_todo():
-    todo = st.session_state["new_todo"] + "\n"
-    todos.append(todo)
+    todo = st.session_state["new_todo"]
+    if len(todo) > 0:
+        todo = todo + "\n"
+        todos.append(todo)
     functions.write_todos(todos)
 
 st.title("My Todo App")
@@ -18,7 +20,8 @@ for index, todo in enumerate(todos):
         todos.pop(index)
         functions.write_todos(todos)
         del st.session_state[todo]
-        st.experimental_rerun() #needed for checkboxes. At some point the experimental_ will be removed.
+        st.session_state['new_todo'] = ""
+        st.rerun() #needed for checkboxes. At some point the experimental_ will be removed.
 
 st.text_input(label="", placeholder="Add new todo...",
               on_change=add_todo, key='new_todo')
